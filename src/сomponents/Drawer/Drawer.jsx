@@ -1,8 +1,9 @@
-import React from 'react';
+/* eslint-disable react/prop-types */
+import CartItem from './CartItem/CartItem';
 
-const Drawer = () => {
+const Drawer = ({ onCLoseCart, items = [] }) => {
   return (
-    <div style={{ display: 'none' }} className="overlay">
+    <div className="overlay">
       <div className="drawer">
         <h2 className="d-flex justify-between mb-30">
           Корзина
@@ -10,10 +11,19 @@ const Drawer = () => {
             className="removeBtn cu-p"
             src="/svg/btn-remove.svg"
             alt="Close"
+            onClick={() => onCLoseCart()}
           />
         </h2>
         <div className="items">
-          <div className="cartItem d-flex align-center mb-20 ">
+          {items.map((item) => (
+            <CartItem
+              title={item.title}
+              imgUrl={item.img}
+              price={item.price}
+              key={Math.random()}
+            />
+          ))}
+          {/* <div className="cartItem d-flex align-center mb-20 ">
             <div
               style={{ backgroundImage: 'url(/img/sneakers/1.jpg)' }}
               className="cartItemImg"
@@ -34,7 +44,7 @@ const Drawer = () => {
               <b>12 999 руб.</b>
             </div>
             <img className="removeBtn" src="/svg/btn-remove.svg" alt="Remove" />
-          </div>
+          </div> */}
         </div>
         <div className="cartTotalBlock">
           <ul>
