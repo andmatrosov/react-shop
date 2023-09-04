@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import './App.scss';
 import axios from 'axios';
-import Card from './сomponents/Card/Card';
 import Drawer from './сomponents/Drawer/Drawer';
 import Header from './сomponents/Header/Header';
 import Home from './сomponents/Home/Home';
+import Favorites from './сomponents/Favorites/Favorites';
 
 function App() {
   const [items, setItems] = useState([]);
@@ -47,6 +47,11 @@ function App() {
       .then((res) => setFavoritesItems((prev) => [...prev, res.data]));
   };
 
+  const onRemoveFavorites = (id) => {
+    axios.delete(`https://64f50563932537f4051ad771.mockapi.io/favorites/${id}`);
+    setFavoritesItems((prev) => prev.filter((item) => item.id !== id));
+  };
+
   const onChangeSearchInput = (event) => {
     setSearchValue(event.target.value);
   };
@@ -63,29 +68,35 @@ function App() {
 
       <Header onClickCart={() => setCartOpened(true)} />
 
-      <Router>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <Home
-                items={items}
-                setItems={setItems}
-                searchValue={searchValue}
-                setSearchValue={setSearchValue}
-                favoriteItems={favoriteItems}
-                setFavoritesItems={setFavoritesItems}
-                onAddToCart={onAddToCart}
-                onRemoveItem={onRemoveItem}
-                onAddToFavorites={onAddToFavorites}
-                onChangeSearchInput={onChangeSearchInput}
-              />
-            }
-            exact
-          />
-          <Route path="/test" element={<>Тест</>} />
-        </Routes>
-      </Router>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Home
+              items={items}
+              setItems={setItems}
+              searchValue={searchValue}
+              setSearchValue={setSearchValue}
+              favoriteItems={favoriteItems}
+              setFavoritesItems={setFavoritesItems}
+              onAddToCart={onAddToCart}
+              onRemoveItem={onRemoveItem}
+              onAddToFavorites={onAddToFavorites}
+              onChangeSearchInput={onChangeSearchInput}
+            />
+          }
+          exact
+        />
+        <Route
+          path="/favorites"
+          element={
+            <Favorites
+              favoriteItems={favoriteItems}
+              onRemoveFavorites={onRemoveFavorites}
+            />
+          }
+        />
+      </Routes>
       {/* <div className="content p-40">
         <div className="d-flex align-center justify-between mb-40">
           <h1>
