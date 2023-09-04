@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import './App.scss';
 import axios from 'axios';
 import Card from './сomponents/Card/Card';
 import Drawer from './сomponents/Drawer/Drawer';
 import Header from './сomponents/Header/Header';
+import Home from './сomponents/Home/Home';
 
 function App() {
   const [items, setItems] = useState([]);
   const [cartItems, setCartItems] = useState([]);
+  const [favoriteItems, setFavoritesItems] = useState([]);
   const [searchValue, setSearchValue] = useState('');
   const [cartOpened, setCartOpened] = useState(false);
 
@@ -19,6 +22,10 @@ function App() {
     axios
       .get('https://64f35cb5edfa0459f6c68724.mockapi.io/cart')
       .then((res) => setCartItems(res.data));
+
+    axios
+      .get('https://64f50563932537f4051ad771.mockapi.io/favorites')
+      .then((res) => setFavoritesItems(res.data));
   }, []);
 
   const onAddToCart = (item) => {
@@ -34,6 +41,12 @@ function App() {
     setCartItems((prev) => prev.filter((item) => item.id !== id));
   };
 
+  const onAddToFavorites = (item) => {
+    axios
+      .post('https://64f50563932537f4051ad771.mockapi.io/favorites', item)
+      .then((res) => setFavoritesItems((prev) => [...prev, res.data]));
+  };
+
   const onChangeSearchInput = (event) => {
     setSearchValue(event.target.value);
   };
@@ -47,8 +60,33 @@ function App() {
           onCLoseCart={() => setCartOpened(false)}
         />
       )}
+
       <Header onClickCart={() => setCartOpened(true)} />
-      <div className="content p-40">
+
+      <Router>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Home
+                items={items}
+                setItems={setItems}
+                searchValue={searchValue}
+                setSearchValue={setSearchValue}
+                favoriteItems={favoriteItems}
+                setFavoritesItems={setFavoritesItems}
+                onAddToCart={onAddToCart}
+                onRemoveItem={onRemoveItem}
+                onAddToFavorites={onAddToFavorites}
+                onChangeSearchInput={onChangeSearchInput}
+              />
+            }
+            exact
+          />
+          <Route path="/test" element={<>Тест</>} />
+        </Routes>
+      </Router>
+      {/* <div className="content p-40">
         <div className="d-flex align-center justify-between mb-40">
           <h1>
             {searchValue
@@ -88,13 +126,13 @@ function App() {
                 imgUrl={item.img}
                 price={item.price}
                 title={item.title}
-                onFavorite={() => console.log('Добавили в закладки')}
+                onFavorite={() => onAddToFavorites(item)}
                 onPlus={() => onAddToCart(item)}
                 key={`CardKey_${indx}`}
               />
             ))}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
