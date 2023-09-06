@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import Card from '../Card/Card';
+import Card from '../../сomponents/Card/Card';
 
 const Home = ({
   items,

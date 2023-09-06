@@ -1,21 +1,14 @@
-/* eslint-disable react/prop-types */
-import { useState } from 'react';
-import Card from '../Card/Card';
+import React from 'react';
 
-const Favorites = ({ favoriteItems, onRemoveFavorites }) => {
-  const onClickFavorites = (id) => {
-    onRemoveFavorites(id);
-  };
-
-  console.log(favoriteItems);
-
+const Orders = ({ items }) => {
   return (
     <div className="content p-40">
       <div className="d-flex align-center justify-between mb-40">
-        <h1>Избранное</h1>
+        <h1>Мои заказы</h1>
       </div>
+
       <div className="d-flex flex-wrap gap-20 sneakers">
-        {favoriteItems.map((item, indx) => (
+        {items.map((item, indx) => (
           <Card
             imgUrl={item.img}
             price={item.price}
@@ -30,4 +23,4 @@ const Favorites = ({ favoriteItems, onRemoveFavorites }) => {
   );
 };
 
-export default Favorites;
+export default Orders;

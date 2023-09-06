@@ -2,11 +2,18 @@
 import { useState } from 'react';
 import styles from './Card.module.scss';
 
-const Card = ({ title, price, imgUrl, onFavorite, onPlus }) => {
+const Card = ({
+  title,
+  price,
+  imgUrl,
+  onFavorite,
+  onPlus,
+  favorited = false,
+}) => {
   const formatedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 
   const [isAdded, setIsAdded] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(favorited);
 
   const onClickPlus = () => {
     setIsAdded(!isAdded);
