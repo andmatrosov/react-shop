@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import './App.scss';
 import axios from 'axios';
@@ -7,55 +7,73 @@ import Header from './сomponents/Header/Header';
 import Home from './pages/Home/Home';
 import Favorites from './pages/Favorites/Favorites';
 import Orders from './pages/Orders/Orders';
+import AppContext from './context';
 
 function App() {
   const [items, setItems] = useState([]);
   const [cartItems, setCartItems] = useState([]);
   const [orderItems, setOrderItems] = useState([]);
-  const [favorite, setFavorite] = useState([]);
+  const [favorites, setFavorites] = useState([]);
   const [searchValue, setSearchValue] = useState('');
   const [cartOpened, setCartOpened] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get('https://64f35cb5edfa0459f6c68724.mockapi.io/Items')
-      .then((res) => setItems(res.data));
+    async function fetchData() {
+      const cartResponse = await axios.get(
+        'https://64f35cb5edfa0459f6c68724.mockapi.io/cart'
+      );
+      const favorites = await axios.get(
+        'https://64f50563932537f4051ad771.mockapi.io/favorites'
+      );
+      const itemsResponse = await axios.get(
+        'https://64f35cb5edfa0459f6c68724.mockapi.io/Items'
+      );
 
-    axios
-      .get('https://64f35cb5edfa0459f6c68724.mockapi.io/cart')
-      .then((res) => setCartItems(res.data));
+      setIsLoading(false);
 
-    axios
-      .get('https://64f50563932537f4051ad771.mockapi.io/favorites')
-      .then((res) => setFavorite(res.data));
+      setCartItems(cartResponse.data);
+      setFavorites(favorites.data);
+      setItems(itemsResponse.data);
+    }
+
+    fetchData();
   }, []);
 
   const onAddToCart = (item) => {
-    axios
-      .post('https://64f35cb5edfa0459f6c68724.mockapi.io/cart', item)
-      .then((res) => {
-        setCartItems((prev) => [...prev, res.data]);
-      });
-  };
-
-  const onRemoveItem = (id) => {
-    axios.delete(`https://64f35cb5edfa0459f6c68724.mockapi.io/cart/${id}`);
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
+    if (cartItems.find((obj) => Number(obj.article) === Number(item.article))) {
+      const targetObj = cartItems.find((i) => i.article === item.article);
+      axios.delete(
+        `https://64f35cb5edfa0459f6c68724.mockapi.io/cart/${targetObj.id}`
+      );
+      setCartItems((prev) =>
+        prev.filter((obj) => Number(obj.article) !== Number(item.article))
+      );
+    } else {
+      axios
+        .post('https://64f35cb5edfa0459f6c68724.mockapi.io/cart', item)
+        .then((res) => {
+          setCartItems((prev) => [...prev, res.data]);
+        });
+    }
   };
 
   const onAddToFavorites = async (item) => {
     try {
-      if (favorite.find((obj) => item.id === obj.id)) {
+      if (favorites.find((obj) => item.article === obj.article)) {
+        const targetObj = favorites.find((i) => i.article === item.article);
         await axios.delete(
-          `https://64f50563932537f4051ad771.mockapi.io/favorites/${item.id}`
+          `https://64f50563932537f4051ad771.mockapi.io/favorites/${targetObj.id}`
         );
-        setFavorite((prev) => prev.filter((favObj) => favObj.id !== item.id));
+        setFavorites((prev) =>
+          prev.filter((favObj) => favObj.article !== item.article)
+        );
       } else {
         const { data } = await axios.post(
           'https://64f50563932537f4051ad771.mockapi.io/favorites',
           item
         );
-        setFavorite((prev) => [...prev, data]);
+        setFavorites((prev) => [...prev, data]);
       }
     } catch (error) {
       alert('Не удалось обновить список избранного');
@@ -66,55 +84,60 @@ function App() {
     setSearchValue(event.target.value);
   };
 
+  const isItemAdded = (article) => {
+    return cartItems.some((obj) => Number(obj.article) === Number(article));
+  };
+
+  const isItemFavorite = (article) => {
+    return favorites.some((obj) => Number(obj.article) === Number(article));
+  };
+
   return (
-    <div className="wrapper clear">
-      {cartOpened && (
-        <Drawer
-          items={cartItems}
-          onRemove={(id) => onRemoveItem(id)}
-          onCLoseCart={() => setCartOpened(false)}
-        />
-      )}
+    <AppContext.Provider
+      value={{ items, cartItems, favorites, isItemAdded, isItemFavorite }}
+    >
+      <div className="wrapper clear">
+        {cartOpened && (
+          <Drawer
+            onRemove={(item) => onAddToCart(item)}
+            onCLoseCart={() => setCartOpened(false)}
+          />
+        )}
 
-      <Header onClickCart={() => setCartOpened(true)} />
+        <Header onClickCart={() => setCartOpened(true)} />
 
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <Home
-              items={items}
-              setItems={setItems}
-              searchValue={searchValue}
-              setSearchValue={setSearchValue}
-              favoriteItems={favorite}
-              setFavoritesItems={setFavorite}
-              onAddToCart={onAddToCart}
-              onRemoveItem={onRemoveItem}
-              onAddToFavorites={onAddToFavorites}
-              onChangeSearchInput={onChangeSearchInput}
-            />
-          }
-          exact
-        />
-        <Route
-          path="/favorites"
-          element={
-            <Favorites
-              favoriteItems={favorite}
-              onAddToFavorites={onAddToFavorites}
-              // onRemoveFavorites={onRemoveFavorites}
-            />
-          }
-        />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Home
+                items={items}
+                searchValue={searchValue}
+                setSearchValue={setSearchValue}
+                favoriteItems={favorites}
+                setFavoritesItems={setFavorites}
+                onAddToCart={onAddToCart}
+                cartItems={cartItems}
+                onAddToFavorites={onAddToFavorites}
+                onChangeSearchInput={onChangeSearchInput}
+                isLoading={isLoading}
+              />
+            }
+            exact
+          />
+          <Route
+            path="/favorites"
+            element={<Favorites onAddToFavorites={onAddToFavorites} />}
+          />
 
-        <Route
-          path="/orders"
-          exact
-          element={<Orders orderItems={orderItems} />}
-        />
-      </Routes>
-    </div>
+          <Route
+            path="/orders"
+            exact
+            element={<Orders orderItems={orderItems} />}
+          />
+        </Routes>
+      </div>
+    </AppContext.Provider>
   );
 }
 

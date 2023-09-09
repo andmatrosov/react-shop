@@ -8,7 +8,28 @@ const Home = ({
   onAddToCart,
   onAddToFavorites,
   onChangeSearchInput,
+  isLoading,
+  favoriteItems,
 }) => {
+  const renderItems = () => {
+    const filteredItems = items.filter((item) =>
+      item.title.toLowerCase().includes(searchValue.toLowerCase())
+    );
+
+    return (isLoading ? [...Array(8)] : filteredItems).map((item, indx) => (
+      <Card
+        onFavorite={() => onAddToFavorites(item)}
+        onPlus={() => onAddToCart(item)}
+        key={indx}
+        loading={isLoading}
+        favorited={favoriteItems.some(
+          (obj) => Number(obj.id) === Number(item.id)
+        )}
+        {...item}
+      />
+    ));
+  };
+
   return (
     <div className="content p-40">
       <div className="d-flex align-center justify-between mb-40">
@@ -40,22 +61,7 @@ const Home = ({
         </div>
       </div>
 
-      <div className="d-flex flex-wrap gap-20 sneakers">
-        {items
-          .filter((item) =>
-            item.title.toLowerCase().includes(searchValue.toLowerCase())
-          )
-          .map((item, indx) => (
-            <Card
-              imgUrl={item.img}
-              price={item.price}
-              title={item.title}
-              onFavorite={() => onAddToFavorites(item)}
-              onPlus={() => onAddToCart(item)}
-              key={`CardKey_${indx}`}
-            />
-          ))}
-      </div>
+      <div className="d-flex flex-wrap gap-20 sneakers">{renderItems()}</div>
     </div>
   );
 };

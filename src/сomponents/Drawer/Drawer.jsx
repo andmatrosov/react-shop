@@ -2,7 +2,12 @@
 import CartItem from './CartItem/CartItem';
 import styles from './Drawer.module.scss';
 
-const Drawer = ({ onCLoseCart, items = [], onRemove }) => {
+import AppContext from '../../context';
+import { useContext } from 'react';
+
+const Drawer = ({ onCLoseCart, onRemove }) => {
+  const { cartItems = [] } = useContext(AppContext);
+
   return (
     <div className={styles.overlay}>
       <div className={styles.drawer}>
@@ -16,16 +21,16 @@ const Drawer = ({ onCLoseCart, items = [], onRemove }) => {
           />
         </h2>
 
-        {items.length > 0 ? (
+        {cartItems.length > 0 ? (
           <>
             <div className={styles.items}>
-              {items.map((item, indx) => (
+              {cartItems.map((item, indx) => (
                 <CartItem
                   title={item.title}
                   imgUrl={item.img}
                   price={item.price}
                   key={`CartItem_${indx}`}
-                  onRemoveClick={() => onRemove(item.id)}
+                  onRemoveClick={() => onRemove(item)}
                 />
               ))}
             </div>

@@ -1,13 +1,15 @@
 /* eslint-disable react/prop-types */
 import { Link } from 'react-router-dom';
 import Card from '../../сomponents/Card/Card';
+import { useContext } from 'react';
+import AppContext from '../../context';
 
-const Favorites = ({ favoriteItems, onAddToFavorites }) => {
+const Favorites = ({ onAddToFavorites }) => {
   const onClickFavorites = (obj) => {
     onAddToFavorites(obj);
   };
 
-  console.log(favoriteItems);
+  const { favorites, isItemFavorite } = useContext(AppContext);
 
   return (
     <div className="content p-40">
@@ -26,15 +28,13 @@ const Favorites = ({ favoriteItems, onAddToFavorites }) => {
         </div>
       </div>
       <div className="d-flex flex-wrap gap-20 sneakers">
-        {favoriteItems.length > 0 ? (
-          favoriteItems.map((item, indx) => (
+        {favorites.length > 0 ? (
+          favorites.map((item, indx) => (
             <Card
-              imgUrl={item.img}
-              price={item.price}
-              title={item.title}
               onFavorite={() => onClickFavorites(item)}
               key={`CardKey_${indx}`}
               favorited={true}
+              {...item}
             />
           ))
         ) : (

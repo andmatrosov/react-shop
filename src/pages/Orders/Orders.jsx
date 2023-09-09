@@ -1,10 +1,20 @@
-import React from 'react';
-
-const Orders = ({ items }) => {
+import { Link } from 'react-router-dom';
+const Orders = ({ items = [] }) => {
   return (
     <div className="content p-40">
       <div className="d-flex align-center justify-between mb-40">
-        <h1>Мои заказы</h1>
+        <div className="d-flex align-center">
+          <Link to="/" className="mr-20">
+            <img
+              width={32}
+              height={32}
+              className="d-block m-0"
+              src="/svg/back-arrow.svg"
+              alt=""
+            />
+          </Link>
+          <h1>Мои заказы</h1>
+        </div>
       </div>
 
       <div className="d-flex flex-wrap gap-20 sneakers">
@@ -13,8 +23,6 @@ const Orders = ({ items }) => {
             imgUrl={item.img}
             price={item.price}
             title={item.title}
-            onFavorite={() => onClickFavorites(item.id)}
-            // onPlus={() => onAddToCart(item)}
             key={`CardKey_${indx}`}
           />
         ))}
