@@ -7,3 +7,5 @@
 - useState
 - useEffect
 - React Router
+- React Context
+- React Skeleton Loader
