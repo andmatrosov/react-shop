@@ -51,8 +51,8 @@ const Card = ({
               <img
                 src={
                   isItemFavorite(article)
-                    ? '/svg/heart-liked.svg'
-                    : '/svg/heart-unliked.svg'
+                    ? 'svg/heart-liked.svg'
+                    : 'svg/heart-unliked.svg'
                 }
                 alt="Favorite"
               />
@@ -74,8 +74,8 @@ const Card = ({
                 height={32}
                 src={
                   isItemAdded(article)
-                    ? '/svg/btn-checked.svg'
-                    : '/svg/btn-plus.svg'
+                    ? 'svg/btn-checked.svg'
+                    : 'svg/btn-plus.svg'
                 }
                 alt="Cart"
               />

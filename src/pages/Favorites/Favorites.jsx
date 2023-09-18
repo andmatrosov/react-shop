@@ -16,12 +16,12 @@ const Favorites = () => {
     <div className="content p-40">
       <div className="d-flex align-center justify-between mb-40">
         <div className="d-flex align-center">
-          <Link to="/" className="mr-20">
+          <Link to="/react-shop/" className="mr-20">
             <img
               width={32}
               height={32}
               className="d-block m-0"
-              src="/svg/back-arrow.svg"
+              src="svg/back-arrow.svg"
               alt=""
             />
           </Link>
@@ -43,7 +43,7 @@ const Favorites = () => {
           <Info
             title="Закладок нет :("
             description="Вы ничего не добавляли в закладки"
-            image="/img/emoji-sad.png"
+            image="img/emoji-sad.png"
           />
         )}
       </div>

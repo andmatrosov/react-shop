@@ -93,6 +93,12 @@ function App() {
     return favorites.some((obj) => Number(obj.article) === Number(article));
   };
 
+  useEffect(() => {
+    cartOpened
+      ? (document.body.style.overflow = 'hidden')
+      : (document.body.style.overflow = 'unset');
+  }, [cartOpened]);
+
   return (
     <AppContext.Provider
       value={{
@@ -120,7 +126,7 @@ function App() {
 
         <Routes>
           <Route
-            path="/"
+            path="/react-shop/"
             element={
               <Home
                 items={items}
@@ -138,11 +144,11 @@ function App() {
             exact
           />
           <Route
-            path="/favorites"
+            path="/react-shop/favorites"
             element={<Favorites onAddToFavorites={onAddToFavorites} />}
           />
 
-          <Route path="/orders" exact element={<Orders />} />
+          <Route path="/react-shop/orders" exact element={<Orders />} />
         </Routes>
       </div>
     </AppContext.Provider>

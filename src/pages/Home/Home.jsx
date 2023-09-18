@@ -43,11 +43,11 @@ const Home = ({
             : 'Все кроссовки'}
         </h1>
         <div className="search-block">
-          <img src="/svg/search.svg" alt="Search" />
+          <img src="svg/search.svg" alt="Search" />
           {searchValue && (
             <img
               className="clear cu-p"
-              src="/svg/btn-remove.svg"
+              src="svg/btn-remove.svg"
               alt="Close"
               onClick={() => setSearchValue('')}
             />

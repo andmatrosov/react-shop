@@ -7,7 +7,7 @@ const Info = ({ title, image, description, isDrawer = false }) => {
   const navigate = useNavigate();
 
   const onClickHandler = () => {
-    isDrawer ? setCartOpened(false) : navigate('/');
+    isDrawer ? setCartOpened(false) : navigate('/react-shop/');
   };
 
   return (
@@ -21,7 +21,7 @@ const Info = ({ title, image, description, isDrawer = false }) => {
       <h2>{title}</h2>
       <p className="opacity-6 mt-10">{description}</p>
       <button onClick={onClickHandler} className="greenButton">
-        <img src="/svg/arrow.svg" alt="Arrow" />
+        <img src="svg/arrow.svg" alt="Arrow" />
         Вернуться назад
       </button>
     </div>

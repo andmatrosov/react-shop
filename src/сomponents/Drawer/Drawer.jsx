@@ -12,7 +12,7 @@ const Drawer = ({ onCloseCart, onRemove, opened }) => {
   const [isOrderComplete, setIsOrderComplete] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [orderId, setOrderId] = useState(null);
-  const { setOrderItems, orderItems } = useContext(AppContext);
+  const { setOrderItems } = useContext(AppContext);
   const { cartItems, setCartItems, totalPriceFormated } = useCart();
 
   const onClickOrder = async () => {
@@ -61,7 +61,7 @@ const Drawer = ({ onCloseCart, onRemove, opened }) => {
           Корзина
           <img
             className="removeBtn cu-p"
-            src="/svg/btn-remove.svg"
+            src="svg/btn-remove.svg"
             alt="Close"
             onClick={() => onCloseCart()}
           />
@@ -104,7 +104,7 @@ const Drawer = ({ onCloseCart, onRemove, opened }) => {
                 className={styles.greenButton}
               >
                 Оформить заказ
-                <img src="/svg/arrow.svg" width={16} height={14} alt="" />
+                <img src="svg/arrow.svg" width={16} height={14} alt="" />
               </button>
             </div>
           </>
@@ -117,9 +117,7 @@ const Drawer = ({ onCloseCart, onRemove, opened }) => {
                 : 'Добавьте хотя бы одну пару кроссовок, чтобы сделать заказ.'
             }
             image={
-              isOrderComplete
-                ? '/svg/complete-order.svg'
-                : '/svg/empty-cart.svg'
+              isOrderComplete ? 'svg/complete-order.svg' : 'svg/empty-cart.svg'
             }
             isDrawer
           />
