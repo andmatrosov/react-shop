@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-import { useState } from 'react';
 import styles from './Card.module.scss';
 import ContentLoader from 'react-content-loader';
 import AppContext from '../../context';
@@ -10,7 +9,7 @@ const Card = ({
   onPlus,
   loading = false,
   title,
-  price,
+  price = '',
   img,
   article,
 }) => {
@@ -48,14 +47,16 @@ const Card = ({
       ) : (
         <>
           <div className={styles.favorite} onClick={onClickFavorite}>
-            <img
-              src={
-                isItemFavorite(article)
-                  ? '/svg/heart-liked.svg'
-                  : '/svg/heart-unliked.svg'
-              }
-              alt="Favorite"
-            />
+            {onFavorite && (
+              <img
+                src={
+                  isItemFavorite(article)
+                    ? '/svg/heart-liked.svg'
+                    : '/svg/heart-unliked.svg'
+                }
+                alt="Favorite"
+              />
+            )}
           </div>
           <img width="100%" height={135} src={img} alt="" />
           <h5>{title}</h5>
@@ -65,18 +66,20 @@ const Card = ({
               <b>{formatedPrice} руб.</b>
             </div>
 
-            <img
-              className={styles.plus}
-              onClick={() => onClickPlus()}
-              width={32}
-              height={32}
-              src={
-                isItemAdded(article)
-                  ? '/svg/btn-checked.svg'
-                  : '/svg/btn-plus.svg'
-              }
-              alt="Cart"
-            />
+            {onPlus && (
+              <img
+                className={styles.plus}
+                onClick={() => onClickPlus()}
+                width={32}
+                height={32}
+                src={
+                  isItemAdded(article)
+                    ? '/svg/btn-checked.svg'
+                    : '/svg/btn-plus.svg'
+                }
+                alt="Cart"
+              />
+            )}
           </div>
         </>
       )}

@@ -3,13 +3,14 @@ import { Link } from 'react-router-dom';
 import Card from '../../сomponents/Card/Card';
 import { useContext } from 'react';
 import AppContext from '../../context';
+import Info from '../../сomponents/Info/Info';
 
-const Favorites = ({ onAddToFavorites }) => {
+const Favorites = () => {
   const onClickFavorites = (obj) => {
     onAddToFavorites(obj);
   };
 
-  const { favorites, isItemFavorite } = useContext(AppContext);
+  const { favorites, onAddToFavorites, onAddToCart } = useContext(AppContext);
 
   return (
     <div className="content p-40">
@@ -34,11 +35,16 @@ const Favorites = ({ onAddToFavorites }) => {
               onFavorite={() => onClickFavorites(item)}
               key={`CardKey_${indx}`}
               favorited={true}
+              onPlus={() => onAddToCart(item)}
               {...item}
             />
           ))
         ) : (
-          <h1>Купи слона</h1>
+          <Info
+            title="Закладок нет :("
+            description="Вы ничего не добавляли в закладки"
+            image="/img/emoji-sad.png"
+          />
         )}
       </div>
     </div>

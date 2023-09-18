@@ -1,5 +1,34 @@
+import { useContext, useEffect, useState } from 'react';
+import AppContext from '../../context';
 import { Link } from 'react-router-dom';
-const Orders = ({ items = [] }) => {
+import Card from '../../сomponents/Card/Card';
+import axios from 'axios';
+
+const Orders = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [orders, serOrders] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await axios.get(
+          'https://64f50563932537f4051ad771.mockapi.io/orders'
+        );
+        serOrders(data.reduce((prev, cur) => [...prev, cur.items], []));
+        setIsLoading(false);
+      } catch (error) {
+        alert('Ошибка при запросе заказов');
+        console.log(error);
+      }
+    })();
+  }, []);
+
+  const renderItems = () => {
+    return (isLoading ? [...Array(8)] : orders.flat()).map((item, indx) => (
+      <Card key={indx} loading={isLoading} {...item} />
+    ));
+  };
+
   return (
     <div className="content p-40">
       <div className="d-flex align-center justify-between mb-40">
@@ -16,17 +45,7 @@ const Orders = ({ items = [] }) => {
           <h1>Мои заказы</h1>
         </div>
       </div>
-
-      <div className="d-flex flex-wrap gap-20 sneakers">
-        {items.map((item, indx) => (
-          <Card
-            imgUrl={item.img}
-            price={item.price}
-            title={item.title}
-            key={`CardKey_${indx}`}
-          />
-        ))}
-      </div>
+      <div className="d-flex flex-wrap gap-20 orders">{renderItems()}</div>
     </div>
   );
 };
