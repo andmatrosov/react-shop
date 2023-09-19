@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Card from '../../сomponents/Card/Card';
 import axios from 'axios';
+import Info from '../../сomponents/Info/Info';
 
 const Orders = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -23,9 +24,17 @@ const Orders = () => {
   }, []);
 
   const renderItems = () => {
-    return (isLoading ? [...Array(8)] : orders.flat()).map((item, indx) => (
-      <Card key={indx} loading={isLoading} {...item} />
-    ));
+    return (isLoading ? [...Array(8)] : orders.flat()).length > 0 ? (
+      orders
+        .flat()
+        .map((item, indx) => <Card key={indx} loading={isLoading} {...item} />)
+    ) : (
+      <Info
+        title="Нет ни одного заказа :("
+        description="Вы что нищеброд? Закажите хоть что-нибудь!"
+        image="img/emoji-poor.png"
+      />
+    );
   };
 
   return (
